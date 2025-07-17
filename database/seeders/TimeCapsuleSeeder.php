@@ -13,6 +13,6 @@ class TimeCapsuleSeeder extends Seeder
      */
     public function run(): void
     {
-        TimeCapsule::factory(50)->create();
+        TimeCapsule::factory(500)->create();
     }
 }
