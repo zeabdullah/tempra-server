@@ -2,15 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TimeCapsuleRequest;
 use App\Models\TimeCapsule;
 use Illuminate\Http\Request;
 
 class TimeCapsuleController extends Controller
 {
-    public function get(Request $request)
+    // TODO - Guide on code flow and logic:
+    // 1. controller gets a request -> pass it to validation
+    // 2. pass validated data and request to service class or
+    // 3. ??
+
+    public function get(TimeCapsuleRequest $request)
     {
-        $searchTitle = $request->input('title') ?? '';
-        $capsules = TimeCapsule::whereLike('title', "%$searchTitle%")->paginate(25);
+        $validated = $request->validated();
+
+        $title = $validated['title'] ?? '';
+        $capsules = TimeCapsule::whereLike('title', "%$title%")->paginate(25);
 
         return response()->json([
             'payload' => $capsules->items(),
@@ -20,18 +28,9 @@ class TimeCapsuleController extends Controller
         ], 200);
     }
 
-    public function create(Request $request)
+    public function create(TimeCapsuleRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'string|nullable|max:255',
-            'color' => 'string|nullable|max:50',
-            'reveal_date' => 'required|date|after:now',
-            'location' => 'required|string|max:255',
-            'is_surprise_mode' => 'boolean',
-            'visibility' => 'required|string|in:public,unlisted,private',
-            'content_type' => 'required|string|in:text',
-            'content_text' => 'required|string',
-        ]);
+        $validated = $request->validated();
 
         $capsule = TimeCapsule::create([
             'title' => $validated['title'] ?? null,
@@ -50,13 +49,29 @@ class TimeCapsuleController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, string $id)
+    public function update(TimeCapsuleRequest $request, string $id)
     {
+        $capsule = TimeCapsule::find($id);
 
+        if (!isset($capsule)) {
+            return response()->json([
+                'message' => "Capsule of id `$id` not found",
+            ], 400);
+        }
+
+        $validated = $request->validated();
+
+        $is_success = $capsule->update($validated);
+
+        if ($is_success) {
+            return response()->json([
+                'payload' => $capsule->getChanges(),
+            ], 200);
+        }
 
         return response()->json([
-            'payload' => null,
-        ], 501);
+            'message' => "Update capsule of id `$id` failed",
+        ], 500);
     }
 
     public function delete(Request $request, string $id)
@@ -65,12 +80,12 @@ class TimeCapsuleController extends Controller
 
         if ($is_success === 1) {
             return response()->json([
-                'payload' => "Deleted capsule of id `$id`",
+                'message' => "Deleted capsule of id `$id`",
             ], 200);
         }
-        return response()->json([
-            'payload' => "Capsule of id `$id` not found",
-        ], 404);
 
+        return response()->json([
+            'message' => "Capsule of id `$id` not found",
+        ], 404);
     }
 }

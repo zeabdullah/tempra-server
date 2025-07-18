@@ -72,11 +72,10 @@ return new class extends Migration {
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists('time_capsules');
-        Schema::create(
+        Schema::table(
             'time_capsules',
             fn(Blueprint $table) => $table->dropSoftDeletes()
         );
-
         Schema::dropIfExists('favorite_time_capsules');
         Schema::dropIfExists('tags');
         Schema::dropIfExists('comments');
