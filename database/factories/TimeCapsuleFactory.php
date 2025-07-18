@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class TimeCapsuleFactory extends Factory
     {
         return [
             'title' => $this->faker->words(3, true),
-            'reveal_date' => $this->faker->dateTime(),
+            'reveal_date' => $this->faker->dateTimeBetween('now', '10 years'),
             'is_revealed' => $this->faker->boolean(),
             'color' => $this->faker->randomElement(['blue', 'magenta', 'yellow', 'gray']),
             'location' => $this->faker->city() . ', ' . $this->faker->country(),
