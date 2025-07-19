@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TimeCapsule extends Model
@@ -28,6 +29,7 @@ class TimeCapsule extends Model
      * @var array
      */
     protected $visible = [
+        'id',
         'title',
         'reveal_date',
         'is_revealed',
@@ -54,4 +56,12 @@ class TimeCapsule extends Model
         'is_surprise_mode' => false,
     ];
 
+
+    /**
+     * Get the user that owns the time capsule.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
 }
