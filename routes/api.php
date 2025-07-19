@@ -1,14 +1,14 @@
 <?php
 
+use App\Http\Controllers\TimeCapsuleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-// Route::group(['prefix' => 'auth'], function () {
-//     Route::get('/signup', function (Request $request) {
-//         return 'signup endpoint';
-//     });
-//     Route::get('/login', function (Request $request) {
-//         return 'login endpoint';
-//     });
-// });
+Route::group(['prefix' => 'time_capsules'], function () {
+    Route::get('/', [TimeCapsuleController::class, 'search']);
+    Route::post('/', [TimeCapsuleController::class, 'create']);
+    Route::patch('/{id}', [TimeCapsuleController::class, 'update']);
+    Route::delete('/{id}', [TimeCapsuleController::class, 'delete']);
+});
+
