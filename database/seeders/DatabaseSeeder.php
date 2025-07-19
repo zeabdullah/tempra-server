@@ -14,6 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+
+        $this->call([
+            UserSeeder::class,
+            TimeCapsuleSeeder::class,
+        ]);
+
         $users = User::factory(20)->create();
 
         $capsules = TimeCapsule::factory(100)

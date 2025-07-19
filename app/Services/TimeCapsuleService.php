@@ -33,7 +33,7 @@ class TimeCapsuleService
         }
 
         $capsule->updateOrFail($validated_data);
-        return $capsule->getChanges();
+        return $capsule->getChanges(); // TODO: Fix. Not working as planned
     }
 
     public static function deleteCapsuleById(string $id)
