@@ -23,7 +23,6 @@ class TimeCapsuleRequest extends FormRequest
     public function rules(): array
     {
         if ($this->isMethod('GET')) {
-            // TODO: this validation
             return [
                 'title' => 'string|nullable|max:255',
             ];
