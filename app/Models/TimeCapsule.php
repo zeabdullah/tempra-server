@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TimeCapsule extends Model
@@ -28,6 +30,7 @@ class TimeCapsule extends Model
      * @var array
      */
     protected $visible = [
+        'id',
         'title',
         'reveal_date',
         'is_revealed',
@@ -54,4 +57,25 @@ class TimeCapsule extends Model
         'is_surprise_mode' => false,
     ];
 
+
+    /**
+     * Get the user that owns the time capsule.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * The users that have favorited the capsule.
+     */
+    public function favoritedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'favorite_time_capsules',
+            'user_id',
+            'time_capsule_id',
+        );
+    }
 }
