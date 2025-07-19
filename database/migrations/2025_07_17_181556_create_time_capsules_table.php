@@ -38,8 +38,8 @@ return new class extends Migration {
             $table->string('content_voice_url')->nullable();
             $table->string('content_image_url')->nullable();
 
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('favorite_time_capsules', function (Blueprint $table) {

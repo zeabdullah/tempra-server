@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,8 +18,9 @@ class TimeCapsuleFactory extends Factory
     public function definition(): array
     {
         return [
+            'user_id' => User::factory(),
             'title' => $this->faker->words(3, true),
-            'reveal_date' => $this->faker->dateTimeBetween('now', '10 years'),
+            'reveal_date' => $this->faker->dateTimeBetween('-1 year', '10 years'),
             'is_revealed' => $this->faker->boolean(),
             'color' => $this->faker->randomElement(['blue', 'magenta', 'yellow', 'gray']),
             'location' => $this->faker->city() . ', ' . $this->faker->country(),

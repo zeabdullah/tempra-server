@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -51,6 +52,19 @@ class User extends Authenticatable
      */
     public function timeCapsules(): HasMany
     {
-        return $this->hasMany(TimeCapsule::class, 'created_by_user_id');
+        return $this->hasMany(TimeCapsule::class, 'user_id');
+    }
+
+    /**
+     * The capsules that the user has favorited.
+     */
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            TimeCapsule::class,
+            'favorite_time_capsules',
+            'user_id',
+            'time_capsule_id'
+        );
     }
 }

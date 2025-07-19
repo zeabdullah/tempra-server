@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
-            'avatar_url' => 'https://i.pravatar.cc/300',
+            'avatar_url' => 'https://i.pravatar.cc/300?u=' . $this->faker->randomNumber(),
         ];
     }
 }

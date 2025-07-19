@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\TimeCapsule;
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +12,6 @@ class TimeCapsuleSeeder extends Seeder
      */
     public function run(): void
     {
-        // TimeCapsule::factory(500)->create();
+        //
     }
 }
