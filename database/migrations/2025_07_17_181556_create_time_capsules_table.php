@@ -28,7 +28,7 @@ return new class extends Migration {
 
             $table->string('title')->nullable()->index();
             $table->string('reveal_date')->nullable();
-            $table->boolean('is_revealed')->default(false);
+            $table->boolean('is_revealed')->default(false); // redundant? maybe, but it'll be used for quicker checks if notifications have been sent.
             $table->string('color');
             $table->string('location');
             $table->boolean('is_surprise_mode');

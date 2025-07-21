@@ -58,6 +58,19 @@ class TimeCapsule extends Model
         'is_surprise_mode' => false,
     ];
 
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_revealed' => 'boolean',
+            'is_surprise_mode' => 'boolean',
+        ];
+    }
+
 
     /**
      * Get the user that owns the time capsule.
