@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
             TimeCapsuleSeeder::class,
         ]);
 
-        $users = User::factory(20)->create();
+        $users = User::factory(25)->create();
 
-        $capsules = TimeCapsule::factory(100)
-            ->recycle($users) // this reuses $users inside `UserFactory` when it calls `User::Factory()`
-            ->hasAttached(User::factory()->recycle($users), [], 'favoritedByUsers')
+        $capsules = TimeCapsule::factory(300)
+            ->recycle($users) // reuses $users inside when `TimeCapsuleFactory` calls `User::factory()`
+            ->hasAttached(User::factory()->recycle($users), [], 'favoritedByUsers') // Seeds `favorite_time_capsules` table with random $users
             ->create();
     }
 }

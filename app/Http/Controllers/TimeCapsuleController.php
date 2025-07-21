@@ -16,6 +16,7 @@ class TimeCapsuleController extends Controller
         $paginated_capsules = TimeCapsuleService::searchCapsules($validated);
         return $this->responseJson($paginated_capsules, status: 200);
     }
+
     public function find(Request $request, string $id)
     {
         try {
@@ -47,7 +48,7 @@ class TimeCapsuleController extends Controller
             $updatedCapsule = TimeCapsuleService::updateCapsuleById($id, $validated);
             if (!isset($updatedCapsule)) {
                 return $this->responseJson(
-                    message: "Capsule not found",
+                    message: "Model not found",
                     status: 404
                 );
             }
