@@ -44,6 +44,7 @@ class TimeCapsule extends Model
         'content_image_url',
         'created_at',
         'updated_at',
+        'user',
     ];
 
     /**

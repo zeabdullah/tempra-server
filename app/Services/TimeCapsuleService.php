@@ -9,7 +9,16 @@ class TimeCapsuleService
     public static function searchCapsules(array $validated): array
     {
         $title = $validated['title'] ?? '';
-        $capsules = TimeCapsule::whereLike('title', "%$title%")->paginate(25);
+        $capsules = TimeCapsule::with('user')
+            ->whereLike('title', "%$title%")
+            ->where('visibility', '=', 'public')
+            ->where('reveal_date', '<=', now())
+            ->paginate(25);
+
+        $capsules->each(function (TimeCapsule $capsule) {
+            $capsule->makeHidden('user_id', 'is_revealed', 'is_surprise_mode', 'visibility');
+            $capsule->user->makeHidden('email');
+        });
 
         return [
             'total' => $capsules->total(),
@@ -21,7 +30,14 @@ class TimeCapsuleService
 
     public static function findCapsuleById(string $id)
     {
-        $capsule = TimeCapsule::find($id);
+        $capsule = TimeCapsule::with('user')->find($id);
+        if (!$capsule) {
+            return null;
+        }
+
+        $capsule->makeHidden('user_id');
+        $capsule->user->makeHidden('email');
+
         return $capsule;
     }
 
