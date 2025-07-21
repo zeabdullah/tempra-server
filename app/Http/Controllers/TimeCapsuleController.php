@@ -17,6 +17,14 @@ class TimeCapsuleController extends Controller
         return $this->responseJson($paginated_capsules, status: 200);
     }
 
+    public function searchMine(SearchTimeCapsuleRequest $request)
+    {
+        $validated = $request->validated();
+        $paginated_capsules = TimeCapsuleService::searchMyCapsules($validated);
+        return $this->responseJson($paginated_capsules, status: 200);
+
+    }
+
     public function find(Request $request, string $id)
     {
         try {

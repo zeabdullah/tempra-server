@@ -3,20 +3,58 @@
 namespace App\Services;
 
 use App\Models\TimeCapsule;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class TimeCapsuleService
 {
+
+    public static function searchMyCapsules(array $validated): array
+    {
+        $user_id = Auth::user()->getAttribute('id');
+        $title = $validated['title'] ?? '';
+
+        $capsules = TimeCapsule::
+            whereUserId($user_id)
+            ->whereLike('title', "%$title%")
+            ->where(
+                function (Builder $query) {
+                    $query
+                        ->where('is_surprise_mode', false)
+                        ->orWhere(function (Builder $q) {
+                            $q
+                                ->where('is_surprise_mode', true)
+                                ->where('reveal_date', '<=', now());
+                        });
+                }
+            )
+            ->paginate(25);
+
+        return [
+            'total' => $capsules->total(),
+            'page' => $capsules->currentPage(),
+            'last_page' => $capsules->lastPage(),
+            'items' => $capsules->items(),
+        ];
+    }
+
     public static function searchCapsules(array $validated): array
     {
         $title = $validated['title'] ?? '';
-        $capsules = TimeCapsule::with('user')
+        $capsules = TimeCapsule::
+            with('user')
             ->whereLike('title', "%$title%")
             ->where('visibility', '=', 'public')
             ->where('reveal_date', '<=', now())
             ->paginate(25);
 
         $capsules->each(function (TimeCapsule $capsule) {
-            $capsule->makeHidden('user_id', 'is_revealed', 'is_surprise_mode', 'visibility');
+            $capsule->makeHidden(
+                'user_id', // we already have a user object, so we don't need this
+                'is_revealed',
+                'is_surprise_mode',
+                'visibility'
+            );
             $capsule->user->makeHidden('email');
         });
 
