@@ -6,15 +6,9 @@ use App\Models\TimeCapsule;
 
 class TimeCapsuleService
 {
-    public static function createCapsule($validated_data)
+    public static function searchCapsules(array $validated): array
     {
-        // Refer to the model's $fillable prop
-        return TimeCapsule::create($validated_data);
-    }
-
-    public static function searchCapsules($validated_data): array
-    {
-        $title = $validated_data['title'] ?? '';
+        $title = $validated['title'] ?? '';
         $capsules = TimeCapsule::whereLike('title', "%$title%")->paginate(25);
 
         return [
@@ -25,14 +19,25 @@ class TimeCapsuleService
         ];
     }
 
-    public static function updateCapsuleById(string $id, $validated_data)
+    public static function findCapsuleById(string $id)
+    {
+        $capsule = TimeCapsule::find($id);
+        return $capsule;
+    }
+
+    public static function createCapsule(array $validated)
+    {
+        return TimeCapsule::create($validated);
+    }
+
+    public static function updateCapsuleById(string $id, array $validated)
     {
         $capsule = TimeCapsule::find($id);
         if (!isset($capsule)) {
             return null;
         }
 
-        $capsule->updateOrFail($validated_data);
+        $capsule->updateOrFail($validated);
         return $capsule->getChanges(); // TODO: Fix. Not working as planned
     }
 

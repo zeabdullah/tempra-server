@@ -18,6 +18,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['prefix' => 'time_capsules'], function () {
     Route::get('/', [TimeCapsuleController::class, 'search']);
     Route::post('/', [TimeCapsuleController::class, 'create']);
+    Route::get('/{id}', [TimeCapsuleController::class, 'find']);
     Route::put('/{id}', [TimeCapsuleController::class, 'update']);
     Route::delete('/{id}', [TimeCapsuleController::class, 'delete']);
 });

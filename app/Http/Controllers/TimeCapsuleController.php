@@ -2,27 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TimeCapsuleRequest;
 use App\Services\TimeCapsuleService;
+use App\Http\Requests\TimeCapsule\StoreTimeCapsuleRequest;
+use App\Http\Requests\TimeCapsule\SearchTimeCapsuleRequest;
+use App\Http\Requests\TimeCapsule\UpdateTimeCapsuleRequest;
 use Illuminate\Http\Request;
 
 class TimeCapsuleController extends Controller
 {
-    public function search(TimeCapsuleRequest $request)
+    public function search(SearchTimeCapsuleRequest $request)
     {
         $validated = $request->validated();
         $paginated_capsules = TimeCapsuleService::searchCapsules($validated);
         return $this->responseJson($paginated_capsules, status: 200);
     }
+    public function find(Request $request, string $id)
+    {
+        try {
+            $capsule = TimeCapsuleService::findCapsuleById($id);
+            if (!$capsule) {
+                return $this->responseJson(message: "Model not found", status: 404);
+            }
+            return $this->responseJson($capsule, status: 200);
+        } catch (\Exception $e) {
+            return $this->responseJson(
+                message: "Failed to find: " . $e->getMessage(),
+                status: 500
+            );
+        }
+    }
 
-    public function create(TimeCapsuleRequest $request)
+    public function create(StoreTimeCapsuleRequest $request)
     {
         $validated = $request->validated();
         $capsule = TimeCapsuleService::createCapsule($validated);
         return $this->responseJson($capsule, 'Created successfully', 201);
     }
 
-    public function update(TimeCapsuleRequest $request, string $id)
+    public function update(UpdateTimeCapsuleRequest $request, string $id)
     {
         $validated = $request->validated();
 

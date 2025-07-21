@@ -12,7 +12,7 @@ class AuthService
     public static function login(array $credentials)
     {
         if (!$token = Auth::attempt($credentials)) {
-            throw new AuthorizationException('Unauthorized', 401);
+            throw new AuthorizationException('Invalid credentials', 401);
         }
         return [$token, Auth::user()];
     }
@@ -24,7 +24,7 @@ class AuthService
             'last_name' => $validated_data['last_name'],
             'email' => $validated_data['email'],
             'password' => Hash::make($validated_data['password']),
-            'avatar_url' => $validated_data['avatar_url'],
+            'avatar_url' => $validated_data['avatar_url'] ?? null,
         ]);
 
         $token = Auth::login($user);

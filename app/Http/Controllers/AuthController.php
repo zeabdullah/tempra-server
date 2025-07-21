@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\AuthService;
+use App\Http\Requests\Auth\StoreUserRequest;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 
@@ -31,17 +32,11 @@ class AuthController extends Controller
         }
     }
 
-    public function register(Request $request)
+    public function register(StoreUserRequest $request)
     {
-        $validated_data = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-            'avatar_url' => 'nullable|url',
-        ]);
+        $validated = $request->validated();
 
-        [$token, $user] = AuthService::register($validated_data);
+        [$token, $user] = AuthService::register($validated);
 
         $payload = [];
         $payload['user'] = $user;
