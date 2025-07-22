@@ -14,4 +14,18 @@ trait ResponseTrait
 
         return response()->json($result, $status);
     }
+
+    public static function notFoundResponse(string $message = 'Not found')
+    {
+        return response()->json([
+            'message' => $message,
+        ], 404);
+    }
+
+    public static function userErrorResponse(string $message = 'User error', int $status = 400)
+    {
+        return response()->json([
+            'message' => $message,
+        ], $status);
+    }
 }
