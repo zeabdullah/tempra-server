@@ -41,7 +41,7 @@ class TimeCapsuleController extends Controller
         }
     }
 
-    public function create(StoreTimeCapsuleRequest $request)
+    public function store(StoreTimeCapsuleRequest $request)
     {
         $validated = $request->validated();
         $capsule = TimeCapsuleService::createCapsule($validated);
