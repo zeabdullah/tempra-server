@@ -22,6 +22,8 @@ class TimeCapsule extends Model
         'visibility',
         'content_type',
         'content_text',
+        'content_voice_url',
+        'content_image_url',
     ];
 
     /**

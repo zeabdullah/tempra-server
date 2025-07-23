@@ -18,7 +18,7 @@ Route::group(['prefix' => 'auth'], function () {
 Route::get('/my_time_capsules', [TimeCapsuleController::class, 'searchMine'])->middleware('auth:api');
 Route::group(['prefix' => 'time_capsules'], function () {
     Route::get('/', [TimeCapsuleController::class, 'search']);
-    Route::post('/', [TimeCapsuleController::class, 'store']);
+    Route::post('/', [TimeCapsuleController::class, 'store'])->middleware('auth:api');
     Route::get('/{id}', [TimeCapsuleController::class, 'find']);
     Route::put('/{id}', [TimeCapsuleController::class, 'update']);
     Route::delete('/{id}', [TimeCapsuleController::class, 'delete']);

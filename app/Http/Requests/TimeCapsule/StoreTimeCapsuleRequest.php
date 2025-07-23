@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\TimeCapsule;
 
+use App\Rules\Base64Image;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,8 +31,18 @@ class StoreTimeCapsuleRequest extends FormRequest
             'location' => 'required|string|max:255',
             'is_surprise_mode' => 'boolean',
             'visibility' => 'required|string|in:public,unlisted,private',
-            'content_type' => 'required|string|in:text',
-            'content_text' => 'required|string',
+            'content_type' => 'required|string|in:text,image,voice',
+            'content_text' => [
+                'exclude_unless:content_type,text',
+                'required_if:content_type,text',
+                'string',
+                'max:2000'
+            ],
+            'content_image' => [
+                'exclude_unless:content_type,image',
+                'required_if:content_type,image',
+                new Base64Image
+            ],
         ];
     }
 }

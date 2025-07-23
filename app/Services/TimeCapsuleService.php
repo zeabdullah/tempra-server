@@ -81,7 +81,21 @@ class TimeCapsuleService
 
     public static function createCapsule(array $validated)
     {
-        return TimeCapsule::create($validated);
+        $capsule = new TimeCapsule($validated);
+
+        if ($img_base64 = $validated['content_image']) {
+            $img_url = StorageService::storeBase64Image($img_base64);
+
+            $capsule->mergeFillable(['user_id']);
+            $capsule->makeHidden(['content_text', 'content_voice_url']);
+
+            $capsule['user_id'] = Auth::user()->getAttribute('id');
+            $capsule['content_image_url'] = $img_url;
+        }
+
+        $capsule->save();
+        $capsule->refresh();
+        return $capsule;
     }
 
     public static function updateCapsuleById(string $id, array $validated)

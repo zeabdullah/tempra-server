@@ -44,12 +44,11 @@ class TimeCapsuleController extends Controller
     public function store(StoreTimeCapsuleRequest $request)
     {
         $validated = $request->validated();
-
         try {
-            $capsule = TimeCapsuleService::createCapsule($validated, $request);
+            $capsule = TimeCapsuleService::createCapsule($validated);
             return $this->responseJson($capsule, 'Created successfully', 201);
         } catch (\Exception $e) {
-            $this->responseJson(message: $e->getMessage(), status: $e->getCode());
+            return $this->responseJson(message: $e->getMessage(), status: 500);
         }
     }
 
@@ -60,7 +59,7 @@ class TimeCapsuleController extends Controller
         try {
             $updatedCapsule = TimeCapsuleService::updateCapsuleById($id, $validated);
             if (!isset($updatedCapsule)) {
-                return $this->responseJson("Model not found");
+                return $this->notFoundResponse("Model not found");
             }
             return $this->responseJson($updatedCapsule, 'success', 200);
         } catch (\Exception $e) {
