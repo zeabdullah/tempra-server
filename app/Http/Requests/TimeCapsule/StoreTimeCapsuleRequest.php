@@ -25,10 +25,9 @@ class StoreTimeCapsuleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'string|max:255',
-            'color' => 'string|max:50',
+            'title' => 'nullable|string|max:255',
+            'color' => 'nullable|string|max:50',
             'reveal_date' => 'required|date|after:now',
-            'location' => 'required|string|max:255',
             'is_surprise_mode' => 'boolean',
             'visibility' => 'required|string|in:public,unlisted,private',
             'content_type' => 'required|string|in:text,image,voice',

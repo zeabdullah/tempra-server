@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\TimeCapsule;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Stevebauman\Location\Facades\Location;
+use Illuminate\Database\Eloquent\Builder;
 
 class TimeCapsuleService
 {
@@ -82,16 +84,28 @@ class TimeCapsuleService
     public static function createCapsule(array $validated)
     {
         $capsule = new TimeCapsule($validated);
+        $position = Location::get();
 
-        if ($img_base64 = $validated['content_image']) {
+        if (!$position) {
+            dd('failed');
+        }
+
+        if (
+            $validated['content_type'] === 'image'
+            && $img_base64 = $validated['content_image']
+        ) {
             $img_url = StorageService::storeBase64Image($img_base64);
 
-            $capsule->mergeFillable(['user_id']);
             $capsule->makeHidden(['content_text', 'content_voice_url']);
-
-            $capsule['user_id'] = Auth::user()->getAttribute('id');
             $capsule['content_image_url'] = $img_url;
         }
+        $capsule->mergeFillable(['user_id']);
+        $capsule['title'] = $validated['title'] ?? '';
+        $capsule['reveal_date'] = Carbon::parse($validated['reveal_date'])->format('Y-m-d h:i:s');
+        $capsule['is_surprise_mode'] = $validated['is_surprise_mode'] ?? false;
+        $capsule['color'] = $validated['color'] ?? 'blue';
+        $capsule['location'] = "$position->cityName, $position->countryName";
+        $capsule['user_id'] = Auth::user()->getAttribute('id');
 
         $capsule->save();
         $capsule->refresh();
