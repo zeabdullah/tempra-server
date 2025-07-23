@@ -17,12 +17,20 @@ class TimeCapsuleController extends Controller
         return $this->responseJson($paginated_capsules, status: 200);
     }
 
+    public function searchMine(SearchTimeCapsuleRequest $request)
+    {
+        $validated = $request->validated();
+        $paginated_capsules = TimeCapsuleService::searchMyCapsules($validated);
+        return $this->responseJson($paginated_capsules, status: 200);
+
+    }
+
     public function find(Request $request, string $id)
     {
         try {
             $capsule = TimeCapsuleService::findCapsuleById($id);
             if (!$capsule) {
-                return $this->responseJson(message: "Model not found", status: 404);
+                return $this->notFoundResponse("Model not found");
             }
             return $this->responseJson($capsule, status: 200);
         } catch (\Exception $e) {
@@ -33,11 +41,15 @@ class TimeCapsuleController extends Controller
         }
     }
 
-    public function create(StoreTimeCapsuleRequest $request)
+    public function store(StoreTimeCapsuleRequest $request)
     {
         $validated = $request->validated();
-        $capsule = TimeCapsuleService::createCapsule($validated);
-        return $this->responseJson($capsule, 'Created successfully', 201);
+        try {
+            $capsule = TimeCapsuleService::createCapsule($validated);
+            return $this->responseJson($capsule, 'Created successfully', 201);
+        } catch (\Exception $e) {
+            return $this->responseJson(message: $e->getMessage(), status: 500);
+        }
     }
 
     public function update(UpdateTimeCapsuleRequest $request, string $id)
@@ -47,10 +59,7 @@ class TimeCapsuleController extends Controller
         try {
             $updatedCapsule = TimeCapsuleService::updateCapsuleById($id, $validated);
             if (!isset($updatedCapsule)) {
-                return $this->responseJson(
-                    message: "Model not found",
-                    status: 404
-                );
+                return $this->notFoundResponse("Model not found");
             }
             return $this->responseJson($updatedCapsule, 'success', 200);
         } catch (\Exception $e) {
@@ -63,19 +72,12 @@ class TimeCapsuleController extends Controller
 
     public function delete(Request $request, string $id)
     {
-
         try {
             $is_success = TimeCapsuleService::deleteCapsuleById($id);
             if ($is_success === 1) {
-                return $this->responseJson(
-                    message: "Successfully deleted",
-                    status: 200
-                );
+                return $this->responseJson(message: "Successfully deleted", status: 200);
             }
-            return $this->responseJson(
-                message: "Capsule not found",
-                status: 404
-            );
+            return $this->notFoundResponse("Capsule not found");
         } catch (\Exception $e) {
             return $this->responseJson(
                 message: "Failed to delete: " . $e->getMessage(),

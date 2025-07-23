@@ -28,7 +28,7 @@ class AuthController extends Controller
             ];
             return $this->responseJson($payload, 'Logged in successfully');
         } catch (AuthorizationException $e) {
-            return $this->responseJson(message: $e->getMessage(), status: $e->getCode());
+            return $this->exceptionResponse($e);
         }
     }
 

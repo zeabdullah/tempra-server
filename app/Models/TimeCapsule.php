@@ -22,6 +22,8 @@ class TimeCapsule extends Model
         'visibility',
         'content_type',
         'content_text',
+        'content_voice_url',
+        'content_image_url',
     ];
 
     /**
@@ -57,6 +59,19 @@ class TimeCapsule extends Model
         'color' => 'gray',
         'is_surprise_mode' => false,
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_revealed' => 'boolean',
+            'is_surprise_mode' => 'boolean',
+        ];
+    }
 
 
     /**
